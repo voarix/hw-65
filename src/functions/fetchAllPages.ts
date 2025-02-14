@@ -1,8 +1,9 @@
 import axiosApi from "../axiosApi.ts";
+import { IPageApi } from "../types";
 
 export const fetchAllPages = async () => {
     try {
-      const response = await axiosApi(`pages.json`);
+      const response = await axiosApi<IPageApi>(`pages.json`);
       if (response.data) {
         const objPages = response.data;
         const objKeys = Object.keys(objPages);

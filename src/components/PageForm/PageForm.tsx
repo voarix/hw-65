@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IPage } from "../../types";
+import { IPage, IPageId } from "../../types";
 import axiosApi from "../../axiosApi.ts";
 import Loader from "../../UI/Loader.tsx";
 import { fetchAllPages } from "../../functions/fetchAllPages.ts";
@@ -10,7 +10,7 @@ interface PageFormData {
   onSubmitAdd: (page: IPage) => void;
 }
 
-const initialForm = {
+const initialForm: IPage = {
   id: "",
   title: "",
   content: "",
@@ -37,7 +37,7 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false,  onSubmitAdd}) => {
   const fetchOnePage = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axiosApi(`pages/${form.id}.json`);
+      const response = await axiosApi<IPageId>(`pages/${form.id}.json`);
 
       if (!response.data) {
         navigate("/");
