@@ -7,8 +7,7 @@ import { fetchAllPages } from "../../functions/fetchAllPages.ts";
 
 interface PageFormData {
   isEdit?: boolean;
-  idPage?: string;
-  onSubmitAdd: (quote: IPage) => void;
+  onSubmitAdd: (page: IPage) => void;
 }
 
 const initialForm = {
@@ -17,7 +16,7 @@ const initialForm = {
   content: "",
 };
 
-const PageForm: React.FC<PageFormData>  = ({isEdit = false, idPage, onSubmitAdd}) => {
+const PageForm: React.FC<PageFormData>  = ({isEdit = false,  onSubmitAdd}) => {
   const [form, setForm] = useState<IPage>(initialForm);
   const [loading, setLoading] = useState<boolean>(false);
   const [pages, setPages] = useState<IPage[]>([]);
@@ -38,19 +37,19 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false, idPage, onSubmitAdd}
   const fetchOnePage = useCallback(async () => {
     try {
       setLoading(true);
-      const response = await axiosApi(`quotes/${idPage}.json`);
+      const response = await axiosApi(`pages/${form.id}.json`);
 
       if (!response.data) {
         navigate("/");
         return;
       }
-      setForm(response.data);
+      setForm({id: form.id, ...response.data});
     } catch (e) {
       console.error(e);
     } finally {
       setLoading(false);
     }
-  }, [idPage, navigate]);
+  }, [form.id, navigate]);
 
   useEffect(() => {
     void fetchPages();

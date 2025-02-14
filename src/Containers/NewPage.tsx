@@ -13,6 +13,7 @@ const NewPage = () => {
     try {
       setLoading(true);
       await axiosApi.put(`pages/${newPage.id}.json`, newPage);
+      console.log(newPage);
       navigate(`/pages/${newPage.id}`);
     } catch (error) {
       console.error(error);

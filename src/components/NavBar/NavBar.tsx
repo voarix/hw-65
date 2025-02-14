@@ -31,7 +31,6 @@ const NavBar = () => {
           <h1 style={{color: "white"}}>Static Pages</h1>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
-              <NavLink className='nav-link' to='/pages/add-page'>Add Page</NavLink>
               {loading ? (
                 <Loader/>
               ) : (
@@ -43,6 +42,8 @@ const NavBar = () => {
                   </li>
                 ))
               )}
+              <NavLink className='nav-link' to='/pages/add-page'>Add Page</NavLink>
+              <NavLink className='nav-link' to='/pages/admin'>Admin</NavLink>
             </ul>
           </div>
         </div>

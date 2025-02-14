@@ -31,6 +31,7 @@ const Page = () => {
     <div>
       <h1>{page.title}</h1>
       <p>{page.content}</p>
+      {/*<button type='button' className='btn btn-secondary' onClick={() => navigate(`/pages/${pageName}/edit`)}>Редактировать</button>*/}
     </div>
   );
 };
