@@ -1,7 +1,7 @@
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
 import NavBar from "./components/NavBar/NavBar.tsx";
-import Page from "./Containers/Page/Page.tsx";
+import Page from "./components/Page/Page.tsx";
 
 const App = () => {
   return (

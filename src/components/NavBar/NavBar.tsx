@@ -1,63 +1,48 @@
 import { NavLink } from "react-router-dom";
 import { useCallback, useEffect, useState } from "react";
-import axiosApi from "../../axiosApi.ts";
-import { IPage, IPageApi } from "../../types";
+import { IPage } from "../../types";
+import Loader from "../../UI/Loader.tsx";
+import { fetchAllPages } from "../../functions/fetchAllPages.ts";
 
 const NavBar = () => {
   const [pages, setPages] = useState<IPage[]>([]);
+  const [loading, setLoading] = useState(false);
 
-  const fetchAllPages = useCallback(async () => {
+
+  const fetchPages = useCallback(async () => {
     try {
-      const response = await axiosApi<IPageApi>("pages.json");
-      if (response.data) {
-        const objPages = response.data;
-        const objKeys = Object.keys(objPages);
-        const pagesArray = objKeys.map((key: string) => {
-          return {
-            id: key,
-            ...objPages[key],
-          };
-        });
-        setPages(pagesArray);
-      } else {
-        setPages([]);
-      }
+      setLoading(true);
+      const fetchedPages = await fetchAllPages();
+      setPages(fetchedPages);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    void fetchAllPages();
-  }, [fetchAllPages]);
+    void fetchPages();
+  }, [fetchPages]);
 
   return (
     <div>
       <nav className="navbar navbar-expand navbar-dark bg-primary shadow">
         <div className="container">
-          <NavLink
-            to="/"
-            className="navbar-brand d-flex align-items-center gap-2"
-          >
-            <h1>Static Pages</h1>
-          </NavLink>
-
+          <h1 style={{color: "white"}}>Static Pages</h1>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <NavLink to="/" className="nav-link">
-                  Home
-                </NavLink>
-              </li>
-              {pages.length
-                ? pages.map((page) => (
-                    <li className="nav-item" key={page.id}>
-                      <NavLink className="nav-link" to={`/pages/${page.id}`}>
-                        {page.title}
-                      </NavLink>
-                    </li>
-                  ))
-                : null}
+              {loading ? (
+                <Loader/>
+              ) : (
+                pages.map((page) => (
+                  <li className="nav-item" key={page.id}>
+                    <NavLink className="nav-link" to={`/pages/${page.id}`}>
+                      {page.title}
+                    </NavLink>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
         </div>
