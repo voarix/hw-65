@@ -53,10 +53,13 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false,  onSubmitAdd}) => {
 
   useEffect(() => {
     void fetchPages();
+  }, [fetchPages]);
+
+  useEffect(() => {
     if (isEdit) {
       void fetchOnePage();
     }
-  }, [fetchPages, fetchOnePage, isEdit]);
+  }, [fetchOnePage, isEdit]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

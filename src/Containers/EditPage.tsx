@@ -13,7 +13,7 @@ const EditPage = () => {
     try {
       setLoading(true);
       await axiosApi.put(`pages/${page.id}.json`, page);
-      navigate('/');
+      navigate('/pages/' + page.id);
     } catch (error) {
       console.error(error);
     } finally {

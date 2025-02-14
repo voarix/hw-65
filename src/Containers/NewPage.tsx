@@ -24,7 +24,7 @@ const NewPage = () => {
     console.log(newPage);
   };
 
-  let form = (<PageForm onSubmitAdd={onSubmitAddNewPage}/>);
+  let form = (<PageForm onSubmitAdd={onSubmitAddNewPage} />);
 
   if (loading) form = <Loader/>;
 
