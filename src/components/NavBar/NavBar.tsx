@@ -8,7 +8,6 @@ const NavBar = () => {
   const [pages, setPages] = useState<IPage[]>([]);
   const [loading, setLoading] = useState(false);
 
-
   const fetchPages = useCallback(async () => {
     try {
       setLoading(true);
@@ -32,6 +31,7 @@ const NavBar = () => {
           <h1 style={{color: "white"}}>Static Pages</h1>
           <div className="collapse navbar-collapse">
             <ul className="navbar-nav ms-auto">
+              <NavLink className='nav-link' to='/pages/add-page'>Add Page</NavLink>
               {loading ? (
                 <Loader/>
               ) : (

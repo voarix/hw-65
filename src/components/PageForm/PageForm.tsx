@@ -1,9 +1,9 @@
-
 import React, { useCallback, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { IPage, IPageApi } from "../../types";
+import { IPage } from "../../types";
 import axiosApi from "../../axiosApi.ts";
 import Loader from "../../UI/Loader.tsx";
+import { fetchAllPages } from "../../functions/fetchAllPages.ts";
 
 interface PageFormData {
   isEdit?: boolean;
@@ -23,24 +23,15 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false, idPage, onSubmitAdd}
   const [pages, setPages] = useState<IPage[]>([]);
   const navigate = useNavigate();
 
-  const fetchAllPages = useCallback(async () => {
+  const fetchPages = useCallback(async () => {
     try {
-      const response = await axiosApi<IPageApi>("pages.json");
-      if (response.data) {
-        const objPages = response.data;
-        const objKeys = Object.keys(objPages);
-        const pagesArray = objKeys.map((key: string) => {
-          return {
-            id: key,
-            ...objPages[key],
-          };
-        });
-        setPages(pagesArray);
-      } else {
-        setPages([]);
-      }
+      setLoading(true);
+      const fetchedPages = await fetchAllPages();
+      setPages(fetchedPages);
     } catch (e) {
       console.error(e);
+    } finally {
+      setLoading(false);
     }
   }, []);
 
@@ -62,18 +53,17 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false, idPage, onSubmitAdd}
   }, [idPage, navigate]);
 
   useEffect(() => {
-    void fetchAllPages();
+    void fetchPages();
     if (isEdit) {
       void fetchOnePage();
     }
-  }, [fetchAllPages, fetchOnePage, isEdit]);
+  }, [fetchPages, fetchOnePage, isEdit]);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     onSubmitAdd(form);
     setForm(initialForm);
   };
-
 
   const onChangeInputMessage = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     setForm({...form, [e.target.name]: e.target.value});
@@ -91,27 +81,39 @@ const PageForm: React.FC<PageFormData>  = ({isEdit = false, idPage, onSubmitAdd}
                   <label className="form-label" htmlFor="id">
                     Your id
                   </label>
-                  <select
-                    className="form-control"
-                    required
-                    name="id"
-                    id="id"
-                    value={form.id}
-                    onChange={onChangeInputMessage}
-                  >
-                    <option value="" disabled>
-                      Choose page
-                    </option>
-                    {pages.length > 0 ? (
-                      pages.map((page) => (
-                        <option key={page.id} value={page.id}>
-                          {page.title}
-                        </option>
-                      ))
-                    ) : (
-                      <option value="" disabled>No pages yet</option>
-                    )}
-                  </select>
+                  {isEdit ? (
+                    <select
+                      className="form-control"
+                      required
+                      name="id"
+                      id="id"
+                      value={form.id}
+                      onChange={onChangeInputMessage}
+                    >
+                      <option value="" disabled>
+                        Choose page
+                      </option>
+                      {pages.length > 0 ? (
+                        pages.map((page) => (
+                          <option key={page.id} value={page.id}>
+                            {page.title}
+                          </option>
+                        ))
+                      ) : (
+                        <option value="" disabled>No pages yet</option>
+                      )}
+                    </select>
+                  ) : (
+                    <input
+                      type="text"
+                      className="form-control"
+                      required
+                      name="id"
+                      id="id"
+                      value={form.id}
+                      onChange={onChangeInputMessage}
+                    />
+                  )}
                 </div>
                 <div className="mb-3">
                   <label className="form-label" htmlFor="title">
